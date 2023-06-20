@@ -7,7 +7,12 @@ const appSlice=createSlice({
 
     },
     reducers:{
+        changeAppLoader:(state,action)=>{
+            state.appLoaderBoolean=action.payload
+
+        }
 
     }
 })
+export const {changeAppLoader} =appSlice.actions
 export default appSlice.reducer

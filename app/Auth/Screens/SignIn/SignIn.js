@@ -7,12 +7,19 @@ import { useState } from 'react';
 import { useEffect } from 'react';
 import CheckBox from 'react-native-check-box'
 import { useNavigation } from '@react-navigation/native';
+import { changeAppLoader } from '../../../redux/reducers/appReducer';
+import { useDispatch } from 'react-redux';
+import { loginUser } from '../../../redux/reducers/userReducer';
+import { Toast } from 'toastify-react-native';
 
 const SignIn = () => {
   const [focused, setfocused] = useState(false)
   const [changeTop, setchangeTop] = useState(170)
   const [toggleCheckBox, setToggleCheckBox] = useState(false)
+  const [email, setEmail] = useState(null)
+  const [password, setPassword] = useState(null)
   const navi=useNavigation()
+  const dispatch=useDispatch()
   useEffect(() => {
       if(focused){
 
@@ -21,9 +28,34 @@ const SignIn = () => {
       }
 
   }, [focused])
+
 const handleChaning=()=>{
   setchangeTop(170)
   setfocused(false)
+
+}
+
+const loginFunction=()=>{
+  if(password===null||email===null){
+     return Toast.warn("please fill all the fields ....")
+
+  }
+  else{
+
+     const obj={
+      email,
+      password
+     }
+
+      dispatch(changeAppLoader(true))
+      setTimeout(() => {
+          dispatch(loginUser(obj))
+          dispatch(changeAppLoader(false))
+
+
+      }, 3000);
+
+  }
 
 }
   return (
@@ -49,7 +81,10 @@ const handleChaning=()=>{
         <TextInput
             placeholder='Enter Your Email here'
             placeholderTextColor={'white'}
-            onFocus={()=>setfocused(!focused)}
+            value={email}
+            onChangeText={(text)=>setEmail(text)}
+            inputMode='email'
+
 
         />
     </View>
@@ -57,31 +92,21 @@ const handleChaning=()=>{
         <TextInput
             placeholder='Enter Your Password here'
             placeholderTextColor={'white'}
-            onFocus={()=>setfocused(!focused)}
+            value={password}
+            onChangeText={(text)=>setPassword(text)}
 
         />
     </View>
 
    </View>
-   <View style={{flexDirection:"row",gap:20,marginVertical:12,
-   marginHorizontal:10}}>
 
-  <CheckBox
-    disabled={true}
-    // value={toggleCheckBox}
-    // onValueChange={(newValue) => setToggleCheckBox(newValue)}
-  />
-  <Text style={{color:"red"}}>I agree with the Terms and Condition</Text>
-
-   </View>
 
    {/* second  */}
    <TouchableOpacity style={{backgroundColor:"gray",padding:10,borderRadius:12,
-   marginHorizontal:40,marginBottom:12}}>
-    <TouchableOpacity>
+   marginHorizontal:40,marginBottom:12,marginTop:10}}
+   onPress={loginFunction}>
         <Text style={{textAlign:"center",padding:4,color:"white",
         fontWeight:"bold"}}>SignIn</Text>
-    </TouchableOpacity>
    </TouchableOpacity>
 
    <View style={{flexDirection:"row",alignItems:"center",marginHorizontal:30,gap:30}}>

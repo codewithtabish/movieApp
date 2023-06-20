@@ -7,7 +7,7 @@ const AppLoader = () => {
   const {appLoaderBoolean} =useSelector((state)=>state.App)
 
    return appLoaderBoolean?
-       <View style={{position:"absolute",zIndex:88,
+       <View style={{position:"absolute",zIndex:1188,
     top:'40%',flex:1,justifyContent:"center",width:"100%",alignItems:"center"}}>
      <Lottie
      loop={true}

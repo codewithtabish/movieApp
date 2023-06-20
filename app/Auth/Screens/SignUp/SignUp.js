@@ -9,6 +9,9 @@ import { useEffect } from 'react';
 import CheckBox from 'react-native-check-box'
 import { useNavigation } from '@react-navigation/native';
 import ToastManager, { Toast } from 'toastify-react-native'
+import { useDispatch, useSelector } from 'react-redux';
+import { createUser } from '../../../redux/reducers/userReducer';
+import { changeAppLoader } from '../../../redux/reducers/appReducer';
 // import CheckBox from '@react-native-community/checkbox';
 const SignUp = () => {
     const [focused, setfocused] = useState(false)
@@ -18,7 +21,11 @@ const SignUp = () => {
     const [password, setPassword] = useState(null)
     const [confirmPassword, setConfirmPassword] = useState(null)
     const navi=useNavigation()
+    const dispatch=useDispatch()
+    const {appLoaderBoolean} =useSelector((state)=>state.App)
+    const {registerUserStorage} =useSelector((state)=>state.user)
     useEffect(() => {
+        // aa()
         if(focused){
 
             setchangeTop(40)
@@ -33,10 +40,34 @@ const handleChaning=()=>{
 }
 const registerFunction=()=>{
     if(password===null||email===null||confirmPassword===null){
-        Toast.warn("please fill all the fields ....")
+       return Toast.warn("please fill all the fields ....")
 
     }
     else{
+        if(password!==confirmPassword){
+           return Toast.error("Password and confirm password does not match")
+        }
+        const obj={
+            email,
+            password,
+            yes:true
+        }
+
+        dispatch(changeAppLoader(true))
+        setTimeout(() => {
+            dispatch(createUser(obj))
+            dispatch(changeAppLoader(false))
+
+
+        }, 3000);
+
+        // alert(registerUserStorage)
+
+
+
+
+
+
 
 
     }
@@ -58,7 +89,8 @@ const registerFunction=()=>{
     </View>
     <View style={{backgroundColor:"white",position:"absolute",
 
-    bottom:0,zIndex:88,padding:15,left:0,right:0,borderTopLeftRadius:50,
+
+    bottom:0,zIndex:0,padding:15,left:0,right:0,borderTopLeftRadius:50,
     borderTopRightRadius:50,top:170}}>
        <View style={{marginVertical:10,flexDirection:"column",gap:12}}>
     <View style={{padding:10,backgroundColor:"#ccc",borderRadius:15,elevation:5}}>
@@ -68,6 +100,7 @@ const registerFunction=()=>{
             onFocus={()=>setfocused(!focused)}
             value={email}
             onChangeText={(text)=>setEmail(text)}
+            inputMode='email'
 
         />
     </View>
